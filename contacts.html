@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Me</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Montserrat', Arial, sans-serif;
+        }
+
+        body {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            background: linear-gradient(135deg, #f5e68a, #ffb347 35%, #ff8a1b 100%);
+            padding: 0;
+            overflow-x: hidden;
+            color: #40514e;
+        }
+
+        body::before,
+        body::after {
+            content: "";
+            position: absolute;
+            width: 240px;
+            height: 85px;
+            background: rgba(255, 255, 255, 0.78);
+            border-radius: 100px;
+            filter: blur(2px);
+            z-index: 0;
+            animation: drift 20s ease-in-out infinite alternate;
+        }
+
+        body::before {
+            top: 80px;
+            left: 8%;
+            box-shadow: 70px 18px 0 rgba(255,255,255,0.65), 150px 8px 0 rgba(255,255,255,0.52);
+        }
+
+        body::after {
+            right: 10%;
+            bottom: 130px;
+            box-shadow: -80px 18px 0 rgba(255,255,255,0.65), -170px 22px 0 rgba(255,255,255,0.52);
+            animation-delay: 1.8s;
+        }
+
+        .sky-birds {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .bird {
+            position: absolute;
+            width: 42px;
+            height: 20px;
+            border-top: 4px solid rgba(0, 0, 0, 0.9);
+            border-radius: 50% 50% 0 50%;
+            transform: rotate(-8deg);
+            opacity: 0.95;
+            animation: flyBird 14s linear infinite;
+        }
+
+        .bird::before {
+            content: "";
+            position: absolute;
+            width: 42px;
+            height: 20px;
+            border-top: 4px solid rgba(0, 0, 0, 0.9);
+            border-radius: 50% 50% 50% 0;
+            left: 8px;
+            top: -1px;
+            transform: rotate(8deg);
+        }
+
+        .bird.b1 { top: 18%; left: 18%; animation-delay: 0s; }
+        .bird.b2 { top: 29%; left: 62%; animation-delay: 3s; }
+        .bird.b3 { top: 15%; left: 72%; animation-delay: 6s; }
+        .bird.b4 { top: 22%; left: 43%; animation-delay: 9s; }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 500px;
+            background: rgba(255, 255, 255, 0.96);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+            margin-top: 60px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 10px;
+            color: #ff7d03;
+            font-size: 2.2rem;
+            font-family: 'Merriweather', serif;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 25px;
+            line-height: 1.6;
+            font-size: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 7px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 15px;
+            outline: none;
+            background: #fff;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: #ff7d03;
+            box-shadow: 0 0 5px rgba(255, 125, 3, 0.25);
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #ffd20b, #f15e1f);
+            color: white;
+            font-size: 17px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        #message {
+            text-align: center;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        .success {
+            color: green;
+        }
+
+        .error {
+            color: red;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .success-panel {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 600px;
+            display: none;
+            text-align: center;
+            padding: 28px 20px;
+            background: rgba(255, 255, 255, 0.96);
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.18);
+            margin-top: 60px;
+        }
+
+        .success-panel.visible {
+            display: block;
+        }
+
+        .success-panel .success-title {
+            font-size: 2rem;
+            color: #ff7d03;
+            margin-bottom: 10px;
+            font-family: 'Merriweather', serif;
+        }
+
+        .home-btn {
+            display: inline-block;
+            margin-top: 18px;
+            padding: 12px 22px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #eed879, #f17844);
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+            transition: 0.3s ease;
+        }
+
+        .home-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+
+        .bottom-container {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            background-color: #f9c62c;
+            padding: 50px 0 20px;
+            margin-top: auto;
+            text-align: center;
+        }
+
+        .bottom-container a {
+            color: #cf4e04;
+            font-family: 'Montserrat', sans-serif;
+            margin: 10px 20px;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .bottom-container a:hover {
+            color: #ffffff;
+        }
+
+        .copyright {
+            color: #fff;
+            font-size: 0.75rem;
+            padding: 20px 0 10px 0;
+        }
+
+        @keyframes drift {
+            0% { transform: translateX(0px) translateY(0px); }
+            100% { transform: translateX(18px) translateY(-12px); }
+        }
+
+        @keyframes flyBird {
+            0% { transform: translateX(-20px) translateY(0) scale(0.9); opacity: 0; }
+            10% { opacity: 0.9; }
+            50% { transform: translateX(30px) translateY(-12px) scale(1); opacity: 1; }
+            100% { transform: translateX(120px) translateY(-22px) scale(1.1); opacity: 0; }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
+
+            .container {
+                padding: 22px 18px;
+                border-radius: 18px;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .subtitle {
+                font-size: 0.95rem;
+            }
+
+            label {
+                font-size: 0.95rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                padding: 18px 14px;
+            }
+
+            h1 {
+                font-size: 1.6rem;
+            }
+
+            .subtitle {
+                font-size: 0.9rem;
+                margin-bottom: 18px;
+            }
+
+            input,
+            select,
+            button {
+                font-size: 14px;
+            }
+
+            .form-group {
+                margin-bottom: 14px;
+            }
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #777;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 7px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 15px;
+            outline: none;
+            background: #fff;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: #ff7d03;
+            box-shadow: 0 0 5px rgba(255, 125, 3, 0.25);
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #5aab03, #07c52a);
+            color: white;
+            font-size: 17px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        #message {
+            text-align: center;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        .success {
+            color: green;
+        }
+
+        .error {
+            color: red;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
+
+            .container {
+                padding: 22px 18px;
+                border-radius: 18px;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .subtitle {
+                font-size: 0.95rem;
+            }
+
+            label {
+                font-size: 0.95rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                padding: 18px 14px;
+            }
+
+            h1 {
+                font-size: 1.6rem;
+            }
+
+            .subtitle {
+                font-size: 0.9rem;
+                margin-bottom: 18px;
+            }
+
+            input,
+            select,
+            button {
+                font-size: 14px;
+            }
+
+            .form-group {
+                margin-bottom: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="sky-birds" aria-hidden="true">
+    <div class="bird b1"></div>
+    <div class="bird b2"></div>
+    <div class="bird b3"></div>
+    <div class="bird b4"></div>
+</div>
+
+<div class="container" id="contactContainer">
+    <h1>📩 Contact Me</h1>
+    <p class="subtitle">💬 Fill out the form and I'll get back to you!</p>
+
+    <form id="contactForm">
+        <div class="form-group">
+            <label>👤 Full Name</label>
+            <input type="text" name="name" placeholder="Enter your name" required>
+        </div>
+
+        <div class="form-group">
+            <label>📩 Email Address</label>
+            <input type="email" name="email" placeholder="example@gmail.com" required>
+        </div>
+
+        <div class="form-group">
+            <label>📱 Phone Number</label>
+            <input type="tel" name="phone" placeholder="Enter your phone number" required>
+        </div>
+
+        <div class="form-group">
+            <label>⚧️ Gender</label>
+            <select name="gender" required>
+                <option value="">Select Gender</option>
+                <option value="Male">♂️ Male</option>
+                <option value="Female">♀️ Female</option>
+                <option value="Other">⚥ Other</option>
+                <option value="Prefer not to say">👽 Prefer not to say</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>🎂 Age</label>
+            <input type="number" name="age" min="1" max="120" placeholder="Enter your age" required>
+        </div>
+
+        <div class="form-group">
+            <label>📅 Date</label>
+            <input type="date" name="date" id="date" required>
+        </div>
+
+        <button type="submit" id="submitBtn"> 🚀 SUBMIT ! 🚀</button>
+        <p id="message"></p>
+    </form>
+</div>
+
+<div class="success-panel" id="successPanel">
+    <h2 class="success-title">✅ Submitted successfully!</h2>
+    <p>Arigatou gozaimasu ! 🍺. I’ll get back to you soon. 🍻</p>
+    <a class="home-btn" href="index.html">🏠 Homepage</a>
+</div>
+
+<script>
+    // Auto-fill today's date
+    const setDate = () => {
+        document.getElementById("date").value = new Date().toISOString().split("T")[0];
+    };
+    setDate();
+
+    // 🔴 PASTE YOUR COPIED /exec URL HERE
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwF8xqe0mklqMKEFD8hedLJJ4VOZYDCp6MoPzWNpyPNroX8Ykm36jpZeIcJM-eSzDV0/exec";
+
+    const form = document.getElementById("contactForm");
+    const button = document.getElementById("submitBtn");
+    const message = document.getElementById("message");
+    const successPanel = document.getElementById("successPanel");
+    const contactContainer = document.getElementById("contactContainer");
+
+    form.addEventListener("submit", function(e) {
+        e.preventDefault();
+
+        button.disabled = true;
+        button.innerText = "⏳ Submitting...";
+        message.innerText = "";
+        message.className = "";
+
+        const formData = new URLSearchParams(new FormData(form));
+
+        fetch(SCRIPT_URL, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: formData
+        })
+        .then(async response => {
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}`);
+            }
+
+            form.classList.add("hidden");
+            contactContainer.classList.add("hidden");
+            successPanel.classList.add("visible");
+            message.innerText = "✅ Submitted successfully!";
+            message.className = "success";
+            form.reset();
+            setDate();
+        })
+        .catch(err => {
+            console.error(err);
+            message.innerText = "❌ Submission failed. Please check the Google Apps Script deployment settings.";
+            message.className = "error";
+        })
+        .finally(() => {
+            button.disabled = false;
+            button.innerText = "🚀 Submit";
+        });
+    });
+</script>
+
+<div class="bottom-container">
+    <a class="footer-link" href="index.html">Home</a>
+    <a class="footer-link" href="https://www.linkedin.com/">LinkedIn</a>
+    <a class="footer-link" href="https://twitter.com/">Twitter</a>
+    <a class="footer-link" href="https://www.appbrewery.co/">Website</a>
+    <p class="copyright">© 2025 kwrwm_xyz.</p>
+</div>
+</body>
+</html>
